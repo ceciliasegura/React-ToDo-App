@@ -45,15 +45,15 @@
 }
 
 .hight {
-    background-color: red;
+    background-color: rgb(229, 109, 109);
 }
 
 .middel {
-    background-color: yellow;
+    background-color: rgb(230, 142, 60);
 }
 
 .low {
-    background-color: green;
+    background-color: rgb(97, 209, 97);
 }
 
 .div-order-filter-date {

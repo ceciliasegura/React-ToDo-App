@@ -21,6 +21,7 @@ function App() {
   const [tasks, setTasks] = useState([]);
   const [filterTasks, setFilterTasks] = useState([]);
   const [tags, setTags] = useState([]);
+  const [tagSelected, setTagSelected] = useState(undefined);
 
   const addTask = (nameTask, priority, tag) => {
     const newTask = {
@@ -66,10 +67,11 @@ function App() {
   const filterTag = (tag, clear) => {
     if (clear) {
       setFilterTasks(tasks);
+      setTagSelected(undefined);
     } else {
-
       const updatedObjects = tasks.filter(obj => obj.tag === tag);
       setFilterTasks(updatedObjects);
+      setTagSelected(tag);
     }
   }
 
@@ -154,7 +156,7 @@ function App() {
 
   return (
     <div className='App'>
-      <TagsMenu tags={tags} filterTag={filterTag} />
+      <TagsMenu tags={tags} tagSelected={tagSelected} filterTag={filterTag} />
       <div className="content">
         <Form addTask={addTask} />
         <div className='div-orders'>
