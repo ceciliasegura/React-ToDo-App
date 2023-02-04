@@ -32,25 +32,3 @@
 .text-line-through {
     text-decoration: line-through;
 }
-
-.hight{
-    background-color: red;
-}
-
-.middel{
-    background-color: yellow;
-}
-
-.low{
-    background-color: green;
-}
-
-.div-order-filter-date{
-    padding: 10px;
-}
-
-.div-orders{
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-}
