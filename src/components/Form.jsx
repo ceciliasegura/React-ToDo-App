@@ -9,6 +9,7 @@ export default function Form({ addTask }) {
             <form className="form" onSubmit={handleOnSubmit}>
                 <input type="text" placeholder="introduce tarea"></input>
                 <label htmlFor="priority">Choose a priority:</label>
+                
                 <select name="priority" id="priority">
                     <option value="hight">Hight</option>
                     <option value="middel">Middel</option>
