@@ -6,16 +6,27 @@ import ToDoList from './components/ToDoList';
 
 const KEY = "todoApp.task";
 
-function App() {
 
+const createNewDateAndFormatt = () => new Date().toLocaleDateString("es-ES", {
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit"
+});
+
+function App() {
   const [tasks, setTasks] = useState([]);
 
-  const addTask = (value) => {
+  const addTask = (nameTask, priority) => {
     const newTask = {
       id: uuidv4(),
-      value: value,
+      value: nameTask,
       completed: false,
-      tags: []
+      tags: [],
+      creationDate: createNewDateAndFormatt(),
+      priority: priority
     };
 
     const newTasks = [...tasks, newTask];
@@ -23,10 +34,13 @@ function App() {
     localStorage.setItem(KEY, JSON.stringify(newTasks));
   };
 
-  const completeTask= (id)=>{
+
+  const completeTask = (id) => {
     const updatedObjects = tasks.map(obj => {
       if (obj.id === id) {
-        return { ...obj, completed: true };
+        return {
+          ...obj, completed: true, finishDate: createNewDateAndFormatt()
+        };
       }
       return obj;
     });
@@ -41,6 +55,58 @@ function App() {
     localStorage.setItem(KEY, JSON.stringify(updatedObjects));
   }
 
+  const orderDes = (e) => {
+    e.preventDefault();
+    const copiedArr = [...tasks];
+    const sortedTasks = copiedArr.sort((a, b) => {
+      return new Date(b.creationDate) - new Date(a.creationDate);
+    });
+
+    setTasks(sortedTasks);
+  }
+
+  const orderAsc = (e) => {
+    e.preventDefault();
+    const copiedArr = [...tasks];
+    const sortedTasks = copiedArr.sort((a, b) => {
+      return new Date(a.creationDate) - new Date(b.creationDate);
+    });
+
+    setTasks(sortedTasks);
+  }
+
+  const orderDesFinish = (e) => {
+    e.preventDefault();
+    const copiedArr = [...tasks];
+    const sortedTasks = copiedArr.sort((a, b) => {
+      if (!b.finishDate) {
+        return -1;
+      }
+      if (!a.finishDate) {
+        return 0;
+      }
+      return new Date(b.finishDate) - new Date(a.finishDate);
+    });
+
+    setTasks(sortedTasks);
+  }
+
+  const orderAscFinish = (e) => {
+    e.preventDefault();
+    const copiedArr = [...tasks];
+    const sortedTasks = copiedArr.sort((a, b) => {
+      if (!b.finishDate) {
+        return -1;
+      }
+      if (!a.finishDate) {
+        return 0;
+      }
+      return new Date(a.finishDate) - new Date(b.finishDate);
+    });
+
+    setTasks(sortedTasks);
+  }
+
   useEffect(() => {
     const storedTasks = JSON.parse(localStorage.getItem(KEY));
     if (storedTasks) {
@@ -51,7 +117,19 @@ function App() {
   return (
     <div className="App">
       <Form addTask={addTask} />
-      <ToDoList tasks={tasks} deleteTask={deleteTask} completeTask={completeTask}/>
+      <div className='div-orders'>
+        <div className='div-order-filter-date'>
+          <p>Order by creation date:</p>
+          <button onClick={orderDes}>Desc</button>
+          <button style={{ marginLeft: "10px" }} onClick={orderAsc}>Asc</button>
+        </div>
+        <div className='div-order-filter-date'>
+          <p>Order by finish date:</p>
+          <button onClick={orderDesFinish}>Desc</button>
+          <button style={{ marginLeft: "10px" }} onClick={orderAscFinish}>Asc</button>
+        </div>
+      </div>
+      <ToDoList tasks={tasks} deleteTask={deleteTask} completeTask={completeTask} />
     </div>
   );
 }

@@ -9,12 +9,18 @@ export default function ToDo({ task, deleteTask, completeTask }) {
         e.preventDefault();
         completeTask(id);
     }
+    const classes = "div-todo " + task.priority;
 
     return (
-        <div className="div-todo">
+
+        <div className={classes}>
             <p className={task.completed ? "text-line-through" : ""}>{task.value}</p>
+            <p className={task.completed ? "text-line-through" : ""}>Creation Date: {task.creationDate}</p>
+            <p className={task.completed ? "text-line-through" : ""}>Finish Date: {task.finishDate}</p>
             <button onClick={(e) => onClickDelete(e, task.id)}>Delete</button>
-            <button onClick={(e) => onClickComplete(e, task.id)}>Complete</button>
+            {(!task.completed) ?
+                <button onClick={(e) => onClickComplete(e, task.id)}>Complete</button>
+                : ''}
         </div>
     )
 }
