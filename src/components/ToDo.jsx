@@ -15,6 +15,7 @@ export default function ToDo({ task, deleteTask, completeTask }) {
 
         <div className={classes}>
             <p className={task.completed ? "text-line-through" : ""}>{task.value}</p>
+            <p className={task.completed ? "text-line-through" : ""}>Tag: {task.tag}</p>
             <p className={task.completed ? "text-line-through" : ""}>Creation Date: {task.creationDate}</p>
             <p className={task.completed ? "text-line-through" : ""}>Finish Date: {task.finishDate}</p>
             <button onClick={(e) => onClickDelete(e, task.id)}>Delete</button>

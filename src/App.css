@@ -1,5 +1,16 @@
 .App {
     display: flex;
+    flex-direction: row;
+    gap: 20%;
+}
+
+.menu-tag {
+    display: flex;
+    align-items: center;
+}
+
+.content {
+    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -33,23 +44,23 @@
     text-decoration: line-through;
 }
 
-.hight{
+.hight {
     background-color: red;
 }
 
-.middel{
+.middel {
     background-color: yellow;
 }
 
-.low{
+.low {
     background-color: green;
 }
 
-.div-order-filter-date{
+.div-order-filter-date {
     padding: 10px;
 }
 
-.div-orders{
+.div-orders {
     display: flex;
     flex-direction: row;
     gap: 10px;

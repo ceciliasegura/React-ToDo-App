@@ -3,6 +3,7 @@ import Form from './components/Form';
 import { v4 as uuidv4 } from "uuid";
 import { useState, useEffect } from "react";
 import ToDoList from './components/ToDoList';
+import TagsMenu from './components/TagsMenu';
 
 const KEY = "todoApp.task";
 
@@ -18,20 +19,23 @@ const createNewDateAndFormatt = () => new Date().toLocaleDateString("es-ES", {
 
 function App() {
   const [tasks, setTasks] = useState([]);
+  const [tags, setTags] = useState([]);
 
-  const addTask = (nameTask, priority) => {
+  const addTask = (nameTask, priority, tag) => {
     const newTask = {
       id: uuidv4(),
       value: nameTask,
       completed: false,
       tags: [],
       creationDate: createNewDateAndFormatt(),
-      priority: priority
+      priority: priority,
+      tag: tag
     };
 
     const newTasks = [...tasks, newTask];
     setTasks(newTasks);
     localStorage.setItem(KEY, JSON.stringify(newTasks));
+    updateTags(newTasks);
   };
 
 
@@ -48,11 +52,16 @@ function App() {
     localStorage.setItem(KEY, JSON.stringify(updatedObjects));
   }
 
+  const filterTag = (tag) => {
+    const updatedObjects = tasks.filter(obj => obj.tag === tag);
+    setTasks(updatedObjects);
+  }
 
   const deleteTask = (id) => {
     const updatedObjects = tasks.filter(obj => obj.id !== id);
     setTasks(updatedObjects);
     localStorage.setItem(KEY, JSON.stringify(updatedObjects));
+    updateTags(updatedObjects);
   }
 
   const orderDes = (e) => {
@@ -111,25 +120,34 @@ function App() {
     const storedTasks = JSON.parse(localStorage.getItem(KEY));
     if (storedTasks) {
       setTasks(storedTasks);
+      updateTags(storedTasks);
     }
   }, []);
 
+  function updateTags(storedTasks) {
+    let uniqueTags = [...new Set(storedTasks.map(v => v.tag))];
+    setTags(uniqueTags);
+  }
+
   return (
-    <div className="App">
-      <Form addTask={addTask} />
-      <div className='div-orders'>
-        <div className='div-order-filter-date'>
-          <p>Order by creation date:</p>
-          <button onClick={orderDes}>Desc</button>
-          <button style={{ marginLeft: "10px" }} onClick={orderAsc}>Asc</button>
+    <div className='App'>
+      <TagsMenu tags={tags} filterTag={filterTag} />
+      <div className="content">
+        <Form addTask={addTask} />
+        <div className='div-orders'>
+          <div className='div-order-filter-date'>
+            <p>Order by creation date:</p>
+            <button onClick={orderDes}>Desc</button>
+            <button style={{ marginLeft: "10px" }} onClick={orderAsc}>Asc</button>
+          </div>
+          <div className='div-order-filter-date'>
+            <p>Order by finish date:</p>
+            <button onClick={orderDesFinish}>Desc</button>
+            <button style={{ marginLeft: "10px" }} onClick={orderAscFinish}>Asc</button>
+          </div>
         </div>
-        <div className='div-order-filter-date'>
-          <p>Order by finish date:</p>
-          <button onClick={orderDesFinish}>Desc</button>
-          <button style={{ marginLeft: "10px" }} onClick={orderAscFinish}>Asc</button>
-        </div>
+        <ToDoList tasks={tasks} deleteTask={deleteTask} completeTask={completeTask} />
       </div>
-      <ToDoList tasks={tasks} deleteTask={deleteTask} completeTask={completeTask} />
     </div>
   );
 }
