@@ -12,11 +12,13 @@
     padding-top: 3%;
     padding-bottom: 3%;
 }
-.div-todo-list{
+
+.div-todo-list {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
+
 .div-todo {
     display: flex;
     flex-direction: row;
@@ -25,4 +27,8 @@
     align-items: center;
     border: 2px solid black;
     padding: 10px;
+}
+
+.text-line-through {
+    text-decoration: line-through;
 }

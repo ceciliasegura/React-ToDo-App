@@ -23,6 +23,24 @@ function App() {
     localStorage.setItem(KEY, JSON.stringify(newTasks));
   };
 
+  const completeTask= (id)=>{
+    const updatedObjects = tasks.map(obj => {
+      if (obj.id === id) {
+        return { ...obj, completed: true };
+      }
+      return obj;
+    });
+    setTasks(updatedObjects);
+    localStorage.setItem(KEY, JSON.stringify(updatedObjects));
+  }
+
+
+  const deleteTask = (id) => {
+    const updatedObjects = tasks.filter(obj => obj.id !== id);
+    setTasks(updatedObjects);
+    localStorage.setItem(KEY, JSON.stringify(updatedObjects));
+  }
+
   useEffect(() => {
     const storedTasks = JSON.parse(localStorage.getItem(KEY));
     if (storedTasks) {
@@ -33,7 +51,7 @@ function App() {
   return (
     <div className="App">
       <Form addTask={addTask} />
-      <ToDoList tasks={tasks} />
+      <ToDoList tasks={tasks} deleteTask={deleteTask} completeTask={completeTask}/>
     </div>
   );
 }
