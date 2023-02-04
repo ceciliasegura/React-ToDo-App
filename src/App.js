@@ -19,6 +19,7 @@ const createNewDateAndFormatt = () => new Date().toLocaleDateString("es-ES", {
 
 function App() {
   const [tasks, setTasks] = useState([]);
+  const [filterTasks, setFilterTasks] = useState([]);
   const [tags, setTags] = useState([]);
 
   const addTask = (nameTask, priority, tag) => {
@@ -34,6 +35,7 @@ function App() {
 
     const newTasks = [...tasks, newTask];
     setTasks(newTasks);
+    setFilterTasks(newTasks);
     localStorage.setItem(KEY, JSON.stringify(newTasks));
     updateTags(newTasks);
   };
@@ -50,11 +52,25 @@ function App() {
     });
     setTasks(updatedObjects);
     localStorage.setItem(KEY, JSON.stringify(updatedObjects));
+    const updatedObjectsFiltered = filterTasks.map(obj => {
+      if (obj.id === id) {
+        return {
+          ...obj, completed: true, finishDate: createNewDateAndFormatt()
+        };
+      }
+      return obj;
+    });
+    setFilterTasks(updatedObjectsFiltered);
   }
 
-  const filterTag = (tag) => {
-    const updatedObjects = tasks.filter(obj => obj.tag === tag);
-    setTasks(updatedObjects);
+  const filterTag = (tag, clear) => {
+    if (clear) {
+      setFilterTasks(tasks);
+    } else {
+
+      const updatedObjects = tasks.filter(obj => obj.tag === tag);
+      setFilterTasks(updatedObjects);
+    }
   }
 
   const deleteTask = (id) => {
@@ -62,31 +78,37 @@ function App() {
     setTasks(updatedObjects);
     localStorage.setItem(KEY, JSON.stringify(updatedObjects));
     updateTags(updatedObjects);
+    const updatedObjectsFiltered = filterTasks.filter(obj => obj.id !== id);
+    if (updatedObjectsFiltered.length > 0) {
+      setFilterTasks(updatedObjectsFiltered);
+    } else {
+      setFilterTasks(updatedObjects);
+    }
   }
 
   const orderDes = (e) => {
     e.preventDefault();
-    const copiedArr = [...tasks];
+    const copiedArr = [...filterTasks];
     const sortedTasks = copiedArr.sort((a, b) => {
       return new Date(b.creationDate) - new Date(a.creationDate);
     });
 
-    setTasks(sortedTasks);
+    setFilterTasks(sortedTasks);
   }
 
   const orderAsc = (e) => {
     e.preventDefault();
-    const copiedArr = [...tasks];
+    const copiedArr = [...filterTasks];
     const sortedTasks = copiedArr.sort((a, b) => {
       return new Date(a.creationDate) - new Date(b.creationDate);
     });
 
-    setTasks(sortedTasks);
+    setFilterTasks(sortedTasks);
   }
 
   const orderDesFinish = (e) => {
     e.preventDefault();
-    const copiedArr = [...tasks];
+    const copiedArr = [...filterTasks];
     const sortedTasks = copiedArr.sort((a, b) => {
       if (!b.finishDate) {
         return -1;
@@ -97,12 +119,12 @@ function App() {
       return new Date(b.finishDate) - new Date(a.finishDate);
     });
 
-    setTasks(sortedTasks);
+    setFilterTasks(sortedTasks);
   }
 
   const orderAscFinish = (e) => {
     e.preventDefault();
-    const copiedArr = [...tasks];
+    const copiedArr = [...filterTasks];
     const sortedTasks = copiedArr.sort((a, b) => {
       if (!b.finishDate) {
         return -1;
@@ -113,13 +135,14 @@ function App() {
       return new Date(a.finishDate) - new Date(b.finishDate);
     });
 
-    setTasks(sortedTasks);
+    setFilterTasks(sortedTasks);
   }
 
   useEffect(() => {
     const storedTasks = JSON.parse(localStorage.getItem(KEY));
     if (storedTasks) {
       setTasks(storedTasks);
+      setFilterTasks(storedTasks);
       updateTags(storedTasks);
     }
   }, []);
@@ -146,7 +169,7 @@ function App() {
             <button style={{ marginLeft: "10px" }} onClick={orderAscFinish}>Asc</button>
           </div>
         </div>
-        <ToDoList tasks={tasks} deleteTask={deleteTask} completeTask={completeTask} />
+        <ToDoList tasks={filterTasks} deleteTask={deleteTask} completeTask={completeTask} />
       </div>
     </div>
   );

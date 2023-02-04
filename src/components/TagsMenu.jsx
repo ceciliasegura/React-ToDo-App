@@ -1,8 +1,8 @@
 export default function TaskMenu({ tags, filterTag }) {
 
-    const clickTag = (e, tag) => {
+    const clickTag = (e, tag, clear) => {
         e.preventDefault();
-        filterTag(tag);
+        filterTag(tag, clear);
     }
 
     return (
@@ -11,6 +11,7 @@ export default function TaskMenu({ tags, filterTag }) {
                 {tags.map((v, i) => {
                     return <li onClick={(e) => clickTag(e, v)} key={i}>{v}</li>
                 })}
+                <li onClick={(e) => clickTag(e, "", true)}>All tags</li>
             </ul>
         </div>
     )
